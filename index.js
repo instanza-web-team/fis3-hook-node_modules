@@ -4,6 +4,7 @@ var resolver = require('./lib/resolver.js');
 var browserify = require('./lib/browserify.js');
 var notified = {};
 var rRequireNull = /\brequire\s*\(\s*('|")this_should_be_null\1\s*\)/ig;
+var selfOpts;
 
 
 function tryNpmLookUp(info, file, opts) {
@@ -119,7 +120,9 @@ function onFileLookUp2(info, file) {
         var key = file.subpath + id;
         if (!notified[key]) {
             notified[key] = true;
-            fis.log.warn('Can\'t resolve `%s` in file [%s], did you miss `npm install %s`?', id, file.subpath, prefix);
+            if (selfOpts.ignoreNPMPackages.indexOf(id) === '-1') {
+                fis.log.warn('Can\'t resolve `%s` in file [%s], did you miss `npm install %s`?', id, file.subpath, prefix);
+            }
         }
     }
 }
@@ -141,6 +144,7 @@ function onJsStandard(file) {
 
 
 var entry = module.exports = function (fis, opts) {
+    selfOpts = opts;
     resolver.init(opts);
     browserify.init(opts);
 
