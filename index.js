@@ -186,5 +186,6 @@ entry.defaultOptions = {
     // 3 只要包同名就会被 merge
     mergeLevel: parseInt(process.versions.node) < 5 ? 1 : 0,
     ignoreDevDependencies: false,
-    shimBuffer: true
+    shimBuffer: true,
+    ignoreNPMPackages: []
 };
